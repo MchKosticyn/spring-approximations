@@ -65,7 +65,6 @@ public class SpringMvcPerformer {
                 _internalLog("[USVM] analysis finished with exception", path);
             } finally {
                 PinnedValueStorage.preparePinnedValues();
-                SpringEngine.endAnalysis();
             }
             return;
         }

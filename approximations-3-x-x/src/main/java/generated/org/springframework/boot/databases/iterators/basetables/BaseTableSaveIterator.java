@@ -27,7 +27,7 @@ public class BaseTableSaveIterator<V> implements Iterator<Object[]> {
     public Object[] next() {
         Engine.assume(hasNext());
 
-        Object[] row = null;
+        Object[] row;
         if (!tblIter.hasNext()) {
             Engine.assume(saved != null);
             row = saved;

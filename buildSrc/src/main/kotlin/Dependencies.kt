@@ -25,3 +25,10 @@ fun Project.addSpringDependencies() {
         springDependencies()
     }
 }
+
+fun Project.addUsvmApiDependencies() {
+    dependencies {
+        compileOnly(files(rootDir.resolve("usvm-api/usvm-jvm-api.jar")))
+        compileOnly(files(rootDir.resolve("usvm-api/usvm-jvm-spring-api.jar")))
+    }
+}

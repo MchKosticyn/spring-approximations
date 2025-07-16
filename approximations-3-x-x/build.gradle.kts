@@ -7,6 +7,8 @@ plugins {
 
 addSpringDependencies()
 
+addUsvmApiDependencies()
+
 dependencies {
     implementation(project(":approximations-common"))
 }

@@ -7,6 +7,10 @@ import java.util.Optional;
 public abstract class ABaseTable<V> extends ANoIdTable {
     public abstract int idColumnIx();
 
+    @SuppressWarnings("unchecked")
+    public Class<V> idFieldType() {
+        return (Class<V>) columnTypes()[idColumnIx()];
+    }
 
     // TODO [OPT]: optimize everywhere
     public Optional<Object[]> findById(V id) {

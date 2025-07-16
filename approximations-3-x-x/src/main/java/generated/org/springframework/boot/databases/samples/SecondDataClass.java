@@ -25,7 +25,7 @@ public class SecondDataClass {
         return oneToMany_id;
     }
 
-    public static SecondDataClass foo(Object[] row) {
+    public static SecondDataClass staticInit(Object[] row) {
         return new SecondDataClass(row, null);
     }
 

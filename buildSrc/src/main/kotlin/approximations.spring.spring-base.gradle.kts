@@ -18,8 +18,6 @@ val approximationsVersion = "0.0.0"
 dependencies {
     compileOnly("$jacodbPackage:jacodb-api-jvm:$jacodbVersion")
     compileOnly("$jacodbPackage:jacodb-approximations:$jacodbVersion")
-    compileOnly(files(rootDir.resolve("usvm-api/usvm-jvm-api.jar")))
-    compileOnly(files(rootDir.resolve("usvm-api/usvm-jvm-spring-api.jar")))
     // Fixes "unknown enum constant 'When.MAYBE'" warning
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     compileOnly(approximationsRepo, "approximations", approximationsVersion)

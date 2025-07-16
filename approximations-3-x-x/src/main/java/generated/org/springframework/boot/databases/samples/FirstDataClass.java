@@ -9,8 +9,10 @@ import generated.org.springframework.boot.databases.saveupddel.SaveUpdDelManyMan
 import generated.org.springframework.boot.databases.wrappers.ListWrapper;
 import generated.org.springframework.boot.databases.wrappers.SetWrapper;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 public class FirstDataClass {
 
@@ -33,10 +35,6 @@ public class FirstDataClass {
     private Set<Integer> oneToManySet; // ids for oneToMany from join table
     private Integer manyToOne_id;
     private Set<Integer> manyToManySet;
-
-    public FirstDataClass(Object[] row) {
-
-    }
 
     public FirstDataClass(
             Object[] row, // row from 'FirstDataClassTable' that sorted by fields name
@@ -110,6 +108,44 @@ public class FirstDataClass {
         );
     }
 
+    public FirstDataClass(Object[] row) {
+        this.id = (Integer) row[0];
+        this.manyToOne_id = (Integer) row[1];
+        this.oneToOne_id = (Integer) row[2];
+
+        this.oneToOne = SpringDatabasesSample._blank2.getRowsWithValueAt(
+                this.oneToOne_id,
+                0 // index of id field in secondDataClass
+        ).first(); // null or something
+
+        this.oneToMany = new ListWrapper<>(
+                SpringDatabasesSample._blank2.getRowsWithValueAt(
+                        this.id,
+                        2 // index of rel-field in secondDataClass
+                )
+        );
+
+        this.oneToManyAddTable = new ListWrapper<>(
+                SpringDatabasesSample._blank2.getRowsRelatedByTable(
+                        this.id,
+                        0,
+                        SpringDatabasesSample._blankAdd)
+        );
+
+        this.manyToOne = SpringDatabasesSample._blank2.getRowsWithValueAt(
+                this.manyToOne_id,
+                0
+        ).first();
+
+        this.manyToMany = new ListWrapper<>(
+                SpringDatabasesSample._blank2.getRowsRelatedByTable(
+                        this.id,
+                        0,
+                        SpringDatabasesSample._blankAdd
+                )
+        );
+    }
+
     // region Lambdas
 
     // generated lambdas where methodArgs are arrays of arguments from original repository method
@@ -177,7 +213,7 @@ public class FirstDataClass {
 
         if (ctx.contains(t)) return;
 
-        CrudManager<FirstDataClass, Integer> manager = new CrudManager<>(
+        CrudManager<FirstDataClass, Integer, Long> manager = new CrudManager<>(
                 SpringDatabasesSample._blank1,
                 FirstDataClass::_serilizer,
                 FirstDataClass::new,
@@ -242,7 +278,7 @@ public class FirstDataClass {
 
         if (ctx.contains(t)) return;
 
-        CrudManager<FirstDataClass, Integer> manager = new CrudManager<>(
+        CrudManager<FirstDataClass, Integer, Long> manager = new CrudManager<>(
                 SpringDatabasesSample._blank1,
                 FirstDataClass::_serilizer,
                 FirstDataClass::new,

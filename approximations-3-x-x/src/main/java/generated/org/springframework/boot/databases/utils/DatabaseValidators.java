@@ -63,6 +63,7 @@ public class DatabaseValidators {
         else if (clazz.equals(Double.class)) { return null; }
         else if (clazz.equals(String.class)) {
             return (Object v) -> {
+                if (v == null) return false;
                 int len = ((String) v).length();
                 return len > 3 && len < 10;
             };
@@ -72,7 +73,7 @@ public class DatabaseValidators {
         else if (clazz.equals(BigInteger.class)) { return null; }
         else if (clazz.equals(BigDecimal.class)) { return null; }
         else {
-            SpringUtils._internalLog("Unsupported soft validator for type", clazz.getName());
+            SpringUtils.internalLog("Unsupported soft validator for type", clazz.getName());
             return null;
         }
     }

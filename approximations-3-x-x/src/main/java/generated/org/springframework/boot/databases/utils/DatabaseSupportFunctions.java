@@ -1,6 +1,6 @@
 package generated.org.springframework.boot.databases.utils;
 
-import generated.org.springframework.boot.SpringUtils;
+import org.usvm.spring.api.SpringEngine;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -26,7 +26,7 @@ public class DatabaseSupportFunctions {
 
     static Integer comparer(Integer left, Integer right) {
         Integer base = basicComparer(left, right);
-        return base == null ? left - right : base;
+        return base == null ? left.compareTo(right) : base;
     }
 
     static Integer comparer(Long left, Long right) {
@@ -117,7 +117,7 @@ public class DatabaseSupportFunctions {
             return (Object l, Object r) -> comparer((BigDecimal) l, (BigDecimal) r);
         }
         else {
-            SpringUtils._internalLog("Unsupported type for databases comparer function");
+            SpringEngine.println("Unsupported type for databases comparer function");
             return null;
         }
     }

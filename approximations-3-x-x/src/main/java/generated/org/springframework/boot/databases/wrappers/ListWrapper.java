@@ -567,7 +567,6 @@ public class ListWrapper<T> implements List<T>, IWrapper<T> {
     }
 
     public T first() {
-        Iterator<T> iter = iterator();
-        return iter.hasNext() ? iter.next() : null;
+        return table.first();
     }
 }

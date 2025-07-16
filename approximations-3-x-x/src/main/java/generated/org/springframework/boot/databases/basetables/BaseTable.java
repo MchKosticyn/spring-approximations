@@ -2,13 +2,17 @@ package generated.org.springframework.boot.databases.basetables;
 
 import generated.org.springframework.boot.databases.iterators.basetables.BaseTableIterator;
 import generated.org.springframework.boot.databases.utils.DatabaseValidators;
+import org.hibernate.StatelessSession;
 import org.jetbrains.annotations.NotNull;
 import org.usvm.api.Engine;
+import stub.spring.SpringDatabases;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public class BaseTable<V> extends ABaseTable<V> {
+public class BaseTable<T, V> extends ABaseTable<V> {
     //      row0  row2  --  rowN
     //  col0
     //  col1
@@ -17,17 +21,25 @@ public class BaseTable<V> extends ABaseTable<V> {
     public Object[][] data;
     public int size;
 
+    public boolean generatedId;
+
     public int columnCount;
     public int idIndex;
     public Class<?>[] columnTypes;
 
+    private Supplier<T> blankInit;
+    private Function<T, V> getIdFunction;
+
     public BaseTable(
             int idIndex,
-            Class<?>... columnTypes) {
+            boolean generatedId,
+            Class<?>... columnTypes
+    ) {
 
         this.columnTypes = columnTypes;
         this.columnCount = columnTypes.length;
         this.idIndex = idIndex;
+        this.generatedId = generatedId;
         this.size = Engine.makeSymbolicInt();
 
         // TODO: think about tables with 0 size (execution prioritize 0 size, that leads to nulls by first())
@@ -37,7 +49,12 @@ public class BaseTable<V> extends ABaseTable<V> {
         this.data = new Object[columnCount][];
 
         for (int i = 0; i < columnCount; i++) {
-            data[i] = Engine.makeSymbolicArray(columnTypes[i], size);
+            if (generatedId && i == idIndex) {
+                data[i] = (Object[]) Array.newInstance(columnTypes[i], size);
+            }
+            else {
+                data[i] = Engine.makeSymbolicArray(columnTypes[i], size);
+            }
         }
     }
 
@@ -78,9 +95,11 @@ public class BaseTable<V> extends ABaseTable<V> {
         Engine.assume(ix < size);
         Object[] row = new Object[columnCount];
         for (int i = 0; i < columnCount; i++) {
-            Object v = data[i][ix];
+            if (i == idIndex && generatedId && data[i][ix] == null) {
+                data[i][ix] = generateNewId();
+            }
 
-            Engine.assume(ix < data[i].length);
+            Object v = data[i][ix];
 
             Function<Object, Boolean> soft = DatabaseValidators.getSoftValidator(columnTypes[i]);
             if (soft != null) Engine.assumeSoft(soft.apply(v));
@@ -95,5 +114,19 @@ public class BaseTable<V> extends ABaseTable<V> {
     @Override
     public Iterator<Object[]> iterator() {
         return new BaseTableIterator<>(this);
+    }
+
+    public void setFunctionsGeneratedIdTable(Supplier<T> blankInit, Function<T, V> getIdFunction) {
+        this.blankInit = blankInit;
+        this.getIdFunction = getIdFunction;
+    }
+
+    public V generateNewId() {
+        T blankObj = blankInit.get();
+        try (StatelessSession s = SpringDatabases.sessionFactory.openStatelessSession()) {
+            s.insert(blankObj);
+        }
+
+        return getIdFunction.apply(blankObj);
     }
 }

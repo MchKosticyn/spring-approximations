@@ -246,7 +246,7 @@ public class ServletRequestDataBinderImpl extends ServletRequestDataBinder {
             }
         }
 
-        SpringUtils._internalLog("Warning! Collection type was not supported!", collectionType.getInternalClass().getName());
+        SpringUtils.internalLog("Warning! Collection type was not supported!", collectionType.getInternalClass().getName());
         Engine.assume(false);
         throw new IllegalArgumentException("Unsupported collection type");
     }
@@ -256,7 +256,7 @@ public class ServletRequestDataBinderImpl extends ServletRequestDataBinder {
             Field field,
             GenericClass childType
     ) {
-        SpringUtils._internalLog("FIELD:", field.toString(), field.getType().toString());
+        SpringUtils.internalLog("FIELD:", field.toString(), field.getType().toString());
         Object existing = readField(parent, field);
 
         if (existing != null)

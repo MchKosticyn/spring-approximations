@@ -3,18 +3,16 @@ package generated.org.springframework.boot.databases.iterators.basetables;
 import generated.org.springframework.boot.databases.basetables.BaseTable;
 import org.usvm.api.Engine;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
-public class BaseTableIterator<V> implements Iterator<Object[]> {
+public class BaseTableIterator<T, V> implements Iterator<Object[]> {
 
-    BaseTable<V> table;
+    BaseTable<T, V> table;
 
     int ix;
     int endIx;
 
-    @SuppressWarnings("unchecked")
-    public BaseTableIterator(BaseTable<V> table) {
+    public BaseTableIterator(BaseTable<T, V> table) {
         this.table = table;
 
         this.ix = 0;
@@ -35,7 +33,6 @@ public class BaseTableIterator<V> implements Iterator<Object[]> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object[] next() {
         Engine.assume(hasNext());
         return table.getRowEnsure(nextIndex());

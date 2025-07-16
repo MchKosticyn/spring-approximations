@@ -3,14 +3,14 @@ package generated.org.springframework.boot.databases.saveupddel;
 import generated.org.springframework.boot.databases.MappedTable;
 import generated.org.springframework.boot.databases.basetables.BaseTableManager;
 import generated.org.springframework.boot.databases.iterators.utils.IteratorWithMap;
-import generated.org.springframework.boot.databases.utils.DatabaseValidators;
 import generated.org.springframework.boot.databases.wrappers.ListWrapper;
 import generated.org.springframework.boot.databases.wrappers.SetWrapper;
+import org.hibernate.type.descriptor.java.JavaType;
+import org.hibernate.type.spi.TypeConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.usvm.api.Engine;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
-// T - type of dataclass, V - type of id field
-public class CrudManager<T, V> {
+// T - type of dataclass, V - type of id field, X - type of id from repository
+public class CrudManager<T, V, X> {
 
     public BaseTableManager<T, V> table;
     public Function<T, Object[]> serializer; // nullable
@@ -28,7 +28,10 @@ public class CrudManager<T, V> {
 
     public boolean isAutoGenerateId;
 
+    public Class<V> idType;
     public Class<T> genericType;
+
+    public JavaType<V> idHibernateType;
 
     public CrudManager(
             BaseTableManager<T, V> table,
@@ -40,22 +43,20 @@ public class CrudManager<T, V> {
         this.isAutoGenerateId = table.isAutoGenerateId;
         this.serializer = serializer;
         this.deserializer = deserializer;
+        this.idType = table.idColType;
         this.genericType = genericType;
+
+        this.idHibernateType = new TypeConfiguration().getJavaTypeRegistry().getDescriptor(idType);
+    }
+
+    public V parseIdField(X value) {
+        return idHibernateType.coerce(value, null);
     }
 
     @SuppressWarnings("unchecked")
     // allowUpdate - may or not update given entity in database
     public void save(T t, boolean allowUpdate) {
         Object[] row = serializer.apply(t);
-
-        if (isAutoGenerateId) {
-            V newId = Engine.makeSymbolic(table.idColType);
-            // default value checks null
-            Function<Object, Boolean> idValidator = DatabaseValidators.getIdValidator(table.idColType);
-            Engine.assume(idValidator.apply(newId));
-            row[table.idColumnIx()] = newId;
-        }
-
         if (!allowUpdate) table.pureSave(row);
         else table.save(row);
     }
@@ -111,12 +112,14 @@ public class CrudManager<T, V> {
         return new SetWrapper<>(mapped);
     }
 
-    public T findById_T(V key) {
+    public T findById_T(X repoKey) {
+        V key = parseIdField(repoKey);
         Optional<Object[]> row = table.findById(key);
         return row.map(deserializer).orElse(null);
     }
 
-    public Optional<T> findById_java_util_Optional(V key) {
+    public Optional<T> findById_java_util_Optional(X repoKey) {
+        V key = parseIdField(repoKey);
         return table.findById(key).map(deserializer);
     }
 

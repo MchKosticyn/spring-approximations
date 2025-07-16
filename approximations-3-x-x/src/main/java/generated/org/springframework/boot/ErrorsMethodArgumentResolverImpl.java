@@ -18,7 +18,7 @@ public class ErrorsMethodArgumentResolverImpl {
         Assert.state(mavContainer != null, "Errors/BindingResult argument only supported on regular handler methods");
         ModelMapImpl model = (ModelMapImpl) (Object) mavContainer.getModel();
         String lastKey = model.lastKey;
-        SpringUtils._internalLog("ErrorsMethodArgumentResolverImpl.resolveArgument.lastKey =", lastKey);
+        SpringUtils.internalLog("ErrorsMethodArgumentResolverImpl.resolveArgument.lastKey =", lastKey);
         if (lastKey != null && lastKey.startsWith(BindingResult.MODEL_KEY_PREFIX)) {
             return model.get(lastKey);
         } else {

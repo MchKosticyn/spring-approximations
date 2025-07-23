@@ -1,6 +1,5 @@
 plugins {
     java
-    `maven-publish`
 }
 
 repositories {

@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("approximations.spring.spring-base")
-    id("com.gradleup.shadow") version "8.3.3" apply false
+    id("com.gradleup.shadow") apply false
     `maven-publish`
 }
 

@@ -1,9 +1,11 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import gradle.kotlin.dsl.accessors._2c95f20277cbe6143532f6e8d67e36cc.compileOnly
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.PluginDependenciesSpecScope
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.version
+import org.gradle.kotlin.dsl.withType
 import org.gradle.plugin.use.PluginDependenciesSpec
 
 fun PluginDependenciesSpecScope.springPlugin(version: String) {
@@ -47,4 +49,11 @@ object Plugins {
 
 fun PluginDependenciesSpec.id(plugin: Plugins.ProjectPlugin) {
     id(plugin.id).version(plugin.version)
+}
+
+fun Project.approximationsSourceEntry(packagePrefix: String) {
+    tasks.withType<ShadowJar> {
+        val packages = listOf("decoders", "encoders", "stub", "generated")
+        packages.forEach { relocate(it, "$packagePrefix.$it") }
+    }
 }

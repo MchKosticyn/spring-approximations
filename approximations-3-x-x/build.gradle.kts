@@ -3,6 +3,7 @@
 plugins {
     springPlugin("3.3.4")
     id("approximations.spring.spring-base")
+    id(Plugins.Shadow.id)
 }
 
 addSpringDependencies()
@@ -10,7 +11,7 @@ addSpringDependencies()
 addUsvmApiDependencies()
 
 dependencies {
-    implementation(project(":approximations-common"))
+    compileOnly(project(":approximations-common"))
 }
 
-addPublish()
+approximationsSourceEntry("v3xx")

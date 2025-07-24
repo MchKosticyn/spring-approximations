@@ -2,7 +2,6 @@ package decoders.org.springframework.boot.databases.wrappers;
 
 import generated.org.springframework.boot.databases.iterators.wrappers.ListWrapperIterator;
 import org.jacodb.api.jvm.JcClassOrInterface;
-import org.jacodb.api.jvm.JcClasspath;
 import org.jacodb.api.jvm.JcField;
 import org.jacodb.api.jvm.JcMethod;
 import org.usvm.api.decoder.DecoderApi;
@@ -12,7 +11,6 @@ import org.usvm.api.decoder.ObjectDecoder;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @DecoderFor(ListWrapperIterator.class)
@@ -46,6 +44,7 @@ public final class ListWrapperIterator_Decoder implements ObjectDecoder {
 
         if (cached_ArrayList_iterator == null || cached_ArrayList_ctor == null) {
             JcClassOrInterface listClass = approximation.getClasspath().findClassOrNull("java.util.ArrayList");
+            assert listClass != null;
             List<JcMethod> methods = listClass.getDeclaredMethods();
             for (JcMethod method : methods) {
                 if (cached_ArrayList_iterator == null && "iterator".equals(method.getName()) && method.getParameters().isEmpty()) {
@@ -60,6 +59,7 @@ public final class ListWrapperIterator_Decoder implements ObjectDecoder {
 
         if (cached_Iterator_next == null) {
             JcClassOrInterface iteratorInterface = approximation.getClasspath().findClassOrNull("java.util.Iterator");
+            assert iteratorInterface != null;
             List<JcMethod> methods = iteratorInterface.getDeclaredMethods();
             for (JcMethod method : methods) {
                 if ("next".equals(method.getName()) && method.getParameters().isEmpty()) {

@@ -2,32 +2,25 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("approximations.spring.spring-base")
-    id("com.gradleup.shadow") apply false
+    id("com.gradleup.shadow") version "8.3.3"
     `maven-publish`
 }
 
-val publicationJar = tasks.register<ShadowJar>("publicationJar") {
-    project.allprojects
-        .filter { it.plugins.hasPlugin(Plugins.Shadow.id) && it != project}
-        .forEach {
-            dependsOn(it.tasks["shadowJar"])
-            from(it.tasks["shadowJar"].outputs.files.single())
-        }
+dependencies {
+    implementation(project("approximations-common"))
+    implementation(project("approximations-3-x-x"))
+}
 
+val publicationJar = tasks.register<ShadowJar>("publicationJar") {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+    from(project.configurations.runtimeClasspath.get())
     mergeServiceFiles()
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "releaseDir"
-            url = uri(layout.buildDirectory.dir("release"))
-        }
-    }
-
     publications {
         create<MavenPublication>("maven") {
-            artifact(publicationJar)
+            artifact(publicationJar.get())
         }
     }
 }

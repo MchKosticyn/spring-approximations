@@ -9,7 +9,7 @@ repositories {
 }
 
 private val jacodbPackage = "com.github.UnitTestBot.jacodb"
-private val jacodbVersion = "4ff7243d3a" // jacodb neo branch
+private val jacodbVersion = "d7dd9d343b" // jacodb neo branch
 
 val approximationsRepo = "org.usvm.approximations.java.stdlib"
 val approximationsVersion = "0.0.0"

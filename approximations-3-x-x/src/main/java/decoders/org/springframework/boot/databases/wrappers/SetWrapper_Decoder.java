@@ -1,7 +1,11 @@
 package decoders.org.springframework.boot.databases.wrappers;
 
 import generated.org.springframework.boot.databases.wrappers.SetWrapper;
-import org.jacodb.api.jvm.*;
+import org.jacodb.api.jvm.JcClassOrInterface;
+import org.jacodb.api.jvm.JcClasspath;
+import org.jacodb.api.jvm.JcField;
+import org.jacodb.api.jvm.JcMethod;
+import org.jacodb.api.jvm.JcParameter;
 import org.usvm.api.decoder.DecoderApi;
 import org.usvm.api.decoder.DecoderFor;
 import org.usvm.api.decoder.ObjectData;
@@ -35,10 +39,9 @@ public final class SetWrapper_Decoder implements ObjectDecoder {
         if (m_ctor == null || m_add == null || m_remove == null) {
             JcClasspath cp = approximation.getClasspath();
             JcClassOrInterface arrayListClass = cp.findClassOrNull("java.util.HashSet");
+            assert arrayListClass != null;
             final List<JcMethod> methods = arrayListClass.getDeclaredMethods();
-            for (int i = 0, c = methods.size(); i < c; i++) {
-
-                JcMethod m = methods.get(i);
+            for (JcMethod m : methods) {
                 if (m.isConstructor()) {
                     if (m_ctor == null) {
                         if (!m.getParameters().isEmpty()) continue;

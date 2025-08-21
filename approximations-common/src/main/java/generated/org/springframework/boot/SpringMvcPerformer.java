@@ -67,9 +67,9 @@ public class SpringMvcPerformer {
                 writePinnedValue(UNHANDLED_EXCEPTION_CLASS, e.getClass());
                 SpringUtils.internalLog("[USVM] analysis finished with exception", path);
             } finally {
-                if (securityEnabled) {
-                    assumeRolesCorrectness();
-                }
+                if (PinnedValueStorage.getPinnedValue(PinnedValueSource.REQUEST_USER, UserDetails.class) == null
+                        && securityEnabled)
+                    PinnedValueStorage.writePinnedValue(PinnedValueSource.REQUEST_USER, createUser());
                 PinnedValueStorage.preparePinnedValues();
             }
             return;

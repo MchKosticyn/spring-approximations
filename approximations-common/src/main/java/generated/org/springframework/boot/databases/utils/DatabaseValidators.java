@@ -60,7 +60,7 @@ public class DatabaseValidators {
             return (Object v) -> {
                 if (v == null) return false;
                 int len = ((String) v).length();
-                return len > 3 && len < 10;
+                return len > 3 & len < 10;
             };
         } else if (clazz.equals(LocalDateTime.class)) {
             return null;

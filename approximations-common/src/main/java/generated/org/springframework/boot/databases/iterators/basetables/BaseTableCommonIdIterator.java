@@ -35,6 +35,10 @@ public class BaseTableCommonIdIterator<T> implements Iterator<T> {
             Engine.assume(!table.hasId(returnedId, t));
         }
         Object[] id = table.buildId(t);
+        for (Object p : id) {
+            Engine.assume(p != null);
+        }
+
         returnedIds.add(id);
     }
 

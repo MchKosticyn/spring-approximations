@@ -11,8 +11,8 @@ repositories {
 private val jacodbPackage = "com.github.UnitTestBot.jacodb"
 private val jacodbVersion = "d7dd9d343b" // jacodb neo branch
 
-val approximationsRepo = "org.usvm.approximations.java.stdlib"
-val approximationsVersion = "0.0.0"
+val approximationsRepo = "com.github.UnitTestBot.java-stdlib-approximations"
+val approximationsVersion = "aa9e358446"
 
 dependencies {
     compileOnly("$jacodbPackage:jacodb-api-jvm:$jacodbVersion")

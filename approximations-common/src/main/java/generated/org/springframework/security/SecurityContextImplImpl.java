@@ -38,8 +38,13 @@ public class SecurityContextImplImpl {
             if (shouldSymbolize(field)) symbolizeField(user, field);
         }
 
-        Engine.assumeSoft(user.getUsername().equals("Test user"));
-        Engine.assumeSoft(user.getPassword().equals("Test password"));
+        String username = user.getUsername();
+        String password = user.getPassword();
+
+        Engine.assume(username != null);
+        Engine.assume(password != null);
+        Engine.assumeSoft(username.equals("Test user"));
+        Engine.assumeSoft(password.equals("Test password"));
 
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         Engine.assume(authorities.size() < 5);

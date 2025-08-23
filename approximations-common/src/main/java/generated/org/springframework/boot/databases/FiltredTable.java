@@ -66,7 +66,7 @@ public class FiltredTable<T> implements ITable<T> {
     public Boolean callFilter(T t) {
         if (filter != null) return filter.apply(t);
         else if (filter2 != null) return filter2.apply(t, methodArgs);
-        else return filter3.apply(t, methodArgs, this);
+        else return filter3.apply(t, methodArgs, table);
     }
 
     @NotNull

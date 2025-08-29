@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@SuppressWarnings("overrides")
 public class FirstDataClass {
 
     private Integer id; // id field
@@ -34,6 +35,25 @@ public class FirstDataClass {
     }
 
     public static FirstDataClass _staticBlankInit() { return new FirstDataClass(); }
+
+    // not generated if user defined their own equals-method
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FirstDataClass) {
+            FirstDataClass other = (FirstDataClass) obj;
+            // I think it's better to use non-lazy operator (it minimizes forking)
+            return _getId().equals(other._getId())
+                    & _getOneToOne().equals(other._getOneToOne())
+                    & _getOneToMany().equals(other._getOneToMany())
+                    & _getOneToManyAddTable().equals(other._getOneToManyAddTable())
+                    & _getManyToOne().equals(other._getManyToOne())
+                    & _getManyToMany().equals(other._getManyToMany())
+                    & _getOneToOne_id().equals(other._getOneToOne_id())
+                    & _getManyToOne_id().equals(other._getManyToOne_id());
+        }
+
+        return false;
+    }
 
     // We do not need copy in this function
     // because this is db setup

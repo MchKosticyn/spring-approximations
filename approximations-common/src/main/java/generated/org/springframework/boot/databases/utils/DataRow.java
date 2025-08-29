@@ -14,6 +14,7 @@ import java.util.function.Function;
 //          "pet": Some pet;
 //      }
 // So "SELECT pet.id FROM Pet pet" will lead "DataRow.get("pet").getId()"
+@SuppressWarnings("overrides")
 public class DataRow {
 
     // We do not want to use map because it is not full concrete and this fact leads forking
@@ -44,6 +45,24 @@ public class DataRow {
     public DataRow(DataRow dataRow) {
         this.entitiesNames = dataRow.getEntitiesNames();
         this.entities = dataRow.getEntities();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DataRow) {
+            DataRow other = (DataRow) o;
+            List<String> otherNames = other.getEntitiesNames();
+            if (entitiesNames.size() != otherNames.size()) return false;
+
+            for (String name : entitiesNames) {
+                Object otherEntity = other.get(name);
+                Object thisEntity = get(name);
+                if (!thisEntity.equals(otherEntity)) return false;
+                SpringEngine.markAsGoodPath();
+            }
+        }
+
+        return false;
     }
 
     public List<String> getEntitiesNames() {

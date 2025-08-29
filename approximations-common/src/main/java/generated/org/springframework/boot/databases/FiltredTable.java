@@ -4,6 +4,7 @@ import generated.org.springframework.boot.databases.iterators.FiltredIterator;
 import org.assertj.core.util.TriFunction;
 import org.jetbrains.annotations.NotNull;
 import org.usvm.api.Engine;
+import org.usvm.spring.api.SpringEngine;
 
 import java.util.Iterator;
 import java.util.function.BiFunction;
@@ -64,9 +65,17 @@ public class FiltredTable<T> implements ITable<T> {
     }
 
     public Boolean callFilter(T t) {
-        if (filter != null) return filter.apply(t);
-        else if (filter2 != null) return filter2.apply(t, methodArgs);
-        else return filter3.apply(t, methodArgs, table);
+        Boolean res = filter != null ? filter.apply(t)
+                : filter2 != null ? filter2.apply(t, methodArgs)
+                : filter3.apply(t, methodArgs, table);
+
+        if (res) {
+            SpringEngine.markAsGoodPath();
+            return true;
+        }
+
+        SpringEngine.markAsBadPath();
+        return false;
     }
 
     @NotNull

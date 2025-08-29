@@ -2,6 +2,7 @@ package generated.org.springframework.boot.databases.iterators.basetables;
 
 import generated.org.springframework.boot.databases.basetables.BaseTableDelete;
 import org.usvm.api.Engine;
+import org.usvm.spring.api.SpringEngine;
 
 import java.util.Iterator;
 
@@ -27,6 +28,7 @@ public class BaseTableDeleteIterator<T> implements Iterator<T> {
 
         curr = tblIter.next();
         if (removed != null && table.isSameId(curr, removed)) {
+            SpringEngine.markAsGoodPath();
             removed = null;
             curr = null;
             return hasNext();

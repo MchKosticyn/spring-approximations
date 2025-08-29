@@ -24,14 +24,6 @@ public abstract class ABaseTable<T> implements ITable<T> {
         return iter.next();
     }
 
-    // TODO [OPT]: optimize everywhere
-    public Optional<T> findById(Object[] id) {
-        for (T t : this) {
-            if (hasId(id, t)) return Optional.of(t);
-        }
-        return Optional.empty();
-    }
-
     public boolean idEquals(Object[] left, Object[] right) {
         for (int i = 0; i < left.length; i++) {
             if (!left[i].equals(right[i])) return false;

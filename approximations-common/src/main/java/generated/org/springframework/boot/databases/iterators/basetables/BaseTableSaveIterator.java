@@ -2,6 +2,7 @@ package generated.org.springframework.boot.databases.iterators.basetables;
 
 import generated.org.springframework.boot.databases.basetables.BaseTableSave;
 import org.usvm.api.Engine;
+import org.usvm.spring.api.SpringEngine;
 
 import java.util.Iterator;
 
@@ -35,6 +36,7 @@ public class BaseTableSaveIterator<T> implements Iterator<T> {
         } else {
             t = tblIter.next();
             if (saved != null && table.isSameId(saved, t)) {
+                SpringEngine.markAsGoodPath();
                 t = saved;
                 saved = null;
             }

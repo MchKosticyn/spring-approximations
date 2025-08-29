@@ -16,17 +16,16 @@ import java.util.function.Function;
 // So "SELECT pet.id FROM Pet pet" will lead "DataRow.get("pet").getId()"
 public class DataRow {
 
-    // We do not want use map because it is not full concrete and this fact leads forking
+    // We do not want to use map because it is not full concrete and this fact leads forking
     private final List<String> entitiesNames; // full concrete, names too
     private final List<Object> entities;
 
     public DataRow(String name, Object entity) {
-        this.entitiesNames = new ArrayList<String>() {{
-            add(name);
-        }};
-        this.entities = new ArrayList<Object>() {{
-            add(entity);
-        }};
+        this.entitiesNames = new ArrayList<>();
+        this.entitiesNames.add(name);
+
+        this.entities = new ArrayList<>();
+        this.entities.add(entity);
     }
 
     public static DataRow of(String name, Object entity) {
@@ -99,10 +98,10 @@ public class DataRow {
             Object entity = otherEntities.get(i);
 
             if (indexOf(entityName, false) != -1) {
-                SpringEngine.println("[DB Warning] Both DataRows for merge contain entity with name: ");
+                SpringEngine.println("[DB Warning] Both DataRows for merge contain entity with name: " + entityName);
             }
             entitiesNames.add(entityName);
-            entities.add(entityName);
+            entities.add(entity);
         }
 
         return this;

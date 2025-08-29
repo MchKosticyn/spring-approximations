@@ -170,7 +170,7 @@ public class BaseTableManager<T, V> implements ITableManager<T> {
     ) {
         checkInitialized();
         // take from manytomany table   | p_id | c_id |
-        // al rows that p_id == value (given parent id)
+        // all rows that p_id == value (given parent id)
         Function<Object[], Boolean> filter = (Object[] row) -> {
             for (int i = 0; i < value.length; i++) {
                 Object id = value[i];
@@ -278,5 +278,10 @@ public class BaseTableManager<T, V> implements ITableManager<T> {
     public void deleteAll() {
         checkInitialized();
         applyRangeDelete((T t) -> true);
+    }
+
+    public long count() {
+        checkInitialized();
+        return tablesChain.size();
     }
 }

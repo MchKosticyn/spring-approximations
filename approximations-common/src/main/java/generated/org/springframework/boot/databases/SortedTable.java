@@ -3,6 +3,7 @@ package generated.org.springframework.boot.databases;
 import generated.org.springframework.boot.databases.iterators.SortedIterator;
 import org.jetbrains.annotations.NotNull;
 import org.usvm.api.Engine;
+import org.usvm.spring.api.SpringEngine;
 
 import java.util.Iterator;
 import java.util.function.BiFunction;
@@ -14,7 +15,7 @@ public class SortedTable<T, R> implements ITable<T> {
     private final int limit; // -1 if no limit
     private final int offset; // 0 if no offset
     private final boolean direction; // true -  ASC, false - DESC
-    private final boolean nulls; // true - LAST, false - FIRST
+    private final boolean nulls; // true - LAST (nulls are larger than the rest), false - FIRST
 
     private int tblSize;
 
@@ -27,6 +28,7 @@ public class SortedTable<T, R> implements ITable<T> {
     private final Object[] methodArgs;
 
     private boolean initialized = false;
+    private boolean initializedSize = false;
 
     public SortedTable(
             ITable<T> table,
@@ -89,14 +91,7 @@ public class SortedTable<T, R> implements ITable<T> {
 
     private void ensureInitialized() {
         if (initialized) return;
-
-        this.tblSize = table.size();
-
-        if (limit == -1) {
-            this.size = tblSize - offset;
-        } else {
-            this.size = Math.min(tblSize - offset, limit);
-        }
+        ensureInitializedSize();
 
         this.sorted = new Object[tblSize];
         Iterator<T> tblIter = table.iterator();
@@ -107,6 +102,20 @@ public class SortedTable<T, R> implements ITable<T> {
 
         sort();
         initialized = true;
+    }
+
+    private void ensureInitializedSize() {
+        if (!initializedSize) return;
+
+        this.tblSize = table.size();
+
+        if (limit == -1) {
+            this.size = tblSize - offset;
+        } else {
+            this.size = Math.min(tblSize - offset, limit);
+        }
+
+        initializedSize = true;
     }
 
     public int getOffset() {
@@ -142,6 +151,7 @@ public class SortedTable<T, R> implements ITable<T> {
                 R right = applyTranslate((T) sorted[j + 1]);
 
                 if (compare(left, right)) {
+                    SpringEngine.markAsBadPath();
 
                     T tmp = (T) sorted[j];
                     sorted[j] = sorted[j + 1];
@@ -156,7 +166,7 @@ public class SortedTable<T, R> implements ITable<T> {
 
     @Override
     public int size() {
-        ensureInitialized();
+        ensureInitializedSize();
         return size;
     }
 

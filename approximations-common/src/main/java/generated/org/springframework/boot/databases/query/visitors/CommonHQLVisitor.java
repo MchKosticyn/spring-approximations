@@ -1395,10 +1395,18 @@ public class CommonHQLVisitor extends AbstractParseTreeVisitor<Object> implement
                 .root
                 .toUpperCase();
         FunctionType func = FunctionType.valueOf(functionName);
-        List<AExpression> args = ctx.ASTERISK() != null
-                ? Collections.emptyList()
-                : visitGenericFunctionArguments(ctx.genericFunctionArguments());
-        return new SqlFunction(func, args);
+        List<AExpression> args;
+        boolean isDistinct = false;
+
+        if (ctx.ASTERISK() != null) {
+            args = Collections.emptyList();
+        }
+        else {
+
+            args = visitGenericFunctionArguments(ctx.genericFunctionArguments());
+            isDistinct = ctx.genericFunctionArguments().DISTINCT() != null;
+        }
+        return new SqlFunction(func, args, isDistinct);
     }
 
     @Override
@@ -1452,7 +1460,7 @@ public class CommonHQLVisitor extends AbstractParseTreeVisitor<Object> implement
         // TODO: predicate may be null
         AExpression predicate = (AExpression) visit(ctx.predicate());
         List<AExpression> args = Collections.singletonList(predicate);
-        return new SqlFunction(FunctionType.EVERY, args);
+        return new SqlFunction(FunctionType.EVERY, args, false);
     }
 
     @Override
@@ -1460,7 +1468,7 @@ public class CommonHQLVisitor extends AbstractParseTreeVisitor<Object> implement
         // TODO: predicate may be null
         AExpression predicate = (AExpression) visit(ctx.predicate());
         List<AExpression> args = Collections.singletonList(predicate);
-        return new SqlFunction(FunctionType.ANY, args);
+        return new SqlFunction(FunctionType.ANY, args, false);
     }
 
     @Override

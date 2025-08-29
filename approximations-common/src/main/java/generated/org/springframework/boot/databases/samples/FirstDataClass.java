@@ -33,6 +33,8 @@ public class FirstDataClass {
 
     }
 
+    public static FirstDataClass _staticBlankInit() { return new FirstDataClass(); }
+
     // We do not need copy in this function
     // because this is db setup
     public void _relationsInit() {
@@ -79,11 +81,13 @@ public class FirstDataClass {
         );
     }
 
+    public static void _staticRelationsInit(FirstDataClass o) { o._relationsInit(); }
+
     @SuppressWarnings("unchecked")
     public FirstDataClass _copy() {
 
         // After copying, it is very important to leave in chain cache table
-        // because entities with ImmutableWrappers goes to track
+        // because entities with ImmutableWrappers goes to track()
         // and we must decode it with all their relations
         // (we can miss it by coping because it creates new refs)
 
@@ -114,6 +118,8 @@ public class FirstDataClass {
 
         return newObj;
     }
+
+    public static FirstDataClass _staticCopy(FirstDataClass o) { return o._copy(); }
 
     // Special getter and setter for id generation
     // Used iff id field single
@@ -195,6 +201,86 @@ public class FirstDataClass {
 
     public void _setManyToOne_id(Integer manyToOne_id) {
         this.manyToOne_id = manyToOne_id;
+    }
+
+    // endregion
+
+    // region static getters
+
+    public static Integer _staticGetIdFunction(FirstDataClass o) {
+        return o._getIdFunction();
+    }
+
+    public static void _staticSetIdFunction(FirstDataClass o, Object id) {
+        o._setIdFunction(id);
+    }
+
+    public static Object[] _staticBuildIdFunction(FirstDataClass o) {
+        return o._buildIdFunction();
+    }
+
+    public static Integer _staticGetId(FirstDataClass o) {
+        return o._getId();
+    }
+
+    public static SecondDataClass _staticGetOneToOne(FirstDataClass o) {
+        return o._getOneToOne();
+    }
+
+    public static List<SecondDataClass> _staticGetOneToMany(FirstDataClass o) {
+        return o._getOneToMany();
+    }
+
+    public static List<SecondDataClass> _staticGetOneToManyAddTable(FirstDataClass o) {
+        return o._getOneToManyAddTable();
+    }
+
+    public static SecondDataClass _staticGetManyToOne(FirstDataClass o) {
+        return o._getManyToOne();
+    }
+
+    public static List<SecondDataClass> _staticGetManyToMany(FirstDataClass o) {
+        return o._getManyToMany();
+    }
+
+    public static Integer _staticGetOneToOne_id(FirstDataClass o) {
+        return o._getOneToOne_id();
+    }
+
+    public static Integer _staticGetManyToOne_id(FirstDataClass o) {
+        return o._getManyToOne_id();
+    }
+
+    public static void _staticSetId(FirstDataClass o, Integer id) {
+        o._setId(id);
+    }
+
+    public static void _staticSetOneToOne(FirstDataClass o, SecondDataClass oneToOne) {
+        o._setOneToOne(oneToOne);
+    }
+
+    public static void _staticSetOneToMany(FirstDataClass o, List<SecondDataClass> oneToMany) {
+        o._setOneToMany(oneToMany);
+    }
+
+    public static void _staticSetOneToManyAddTable(FirstDataClass o, List<SecondDataClass> oneToManyAddTable) {
+        o._setOneToManyAddTable(oneToManyAddTable);
+    }
+
+    public static void _staticSetManyToOne(FirstDataClass o, SecondDataClass manyToOne) {
+        o._setManyToOne(manyToOne);
+    }
+
+    public static void _staticSetManyToMany(FirstDataClass o, List<SecondDataClass> manyToMany) {
+        o._setManyToMany(manyToMany);
+    }
+
+    public static void _staticSetOneToOne_id(FirstDataClass o, Integer oneToOne_id) {
+        o._setOneToOne_id(oneToOne_id);
+    }
+
+    public static void _staticSetManyToOne_id(FirstDataClass o, Integer manyToOne_id) {
+        o._setManyToOne_id(manyToOne_id);
     }
 
     // endregion

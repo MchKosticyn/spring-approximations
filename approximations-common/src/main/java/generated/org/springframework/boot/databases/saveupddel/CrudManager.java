@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
-// T - type of dataclass, V -type of id from DTO, X - type of id from repository
+// T - type of dataclass, V - type of id from DTO, X - type of id from repository
 public class CrudManager<T, V, X> {
 
     private final BaseTableManager<T, V> table;
@@ -75,6 +75,8 @@ public class CrudManager<T, V, X> {
             table.delete(t);
         }
     }
+
+    public long count() { return table.count(); }
 
     // It is important that names of following template
     // [name of repository method]_[return type where "." replaced with "_"]

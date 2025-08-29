@@ -34,14 +34,11 @@ public class BaseTable<T> extends ABaseTable<T> {
     private Function<T, Object>[] gettersForSoft;
     private Class<?>[] typesForSoft;
 
-    private int nextIndexToSet;
-
     public BaseTable(
             Class<T> type,
             boolean generatedId
     ) {
         this.generatedId = generatedId;
-        this.nextIndexToSet = 0;
         this.size = Engine.makeSymbolicInt();
         this.entityType = type;
 
@@ -87,13 +84,9 @@ public class BaseTable<T> extends ABaseTable<T> {
     private void applyCommonSoftValidation(T t) {
         for (int i = 0; i < gettersForSoft.length; i++) {
             Class<?> softType = typesForSoft[i];
-            Function<Object, Boolean> soft = DatabaseValidators.getSoftValidator(softType);
-
-            if (soft != null) {
-                Function<T, Object> getter = gettersForSoft[i];
-                Object value = getter.apply(t);
-                Engine.assumeSoft(soft.apply(value));
-            }
+            Function<T, Object> getter = gettersForSoft[i];
+            Object value = getter.apply(t);
+            DatabaseValidators.deprioritizeValue(value, softType);
         }
     }
 

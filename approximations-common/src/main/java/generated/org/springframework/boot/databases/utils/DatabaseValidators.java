@@ -2,7 +2,6 @@ package generated.org.springframework.boot.databases.utils;
 
 import org.usvm.spring.api.SpringEngine;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -76,7 +75,31 @@ public class DatabaseValidators {
         }
     }
 
-    public static <T> boolean isDefaultValue(T value, Class<T> clazz) {
-        return value.equals(Array.get(Array.newInstance(clazz, 1), 0));
+    @SuppressWarnings({"StatementWithEmptyBody"})
+    public static void deprioritizeValue(Object v, Class<?> clazz) {
+        if (clazz.equals(Boolean.class)) {
+        } else if (clazz.equals(Byte.class)) {
+        } else if (clazz.equals(Short.class)) {
+        } else if (clazz.equals(Integer.class)) {
+        } else if (clazz.equals(Long.class)) {
+        } else if (clazz.equals(Float.class)) {
+        } else if (clazz.equals(Double.class)) {
+        } else if (clazz.equals(String.class)) {
+            if (v == null) {
+                SpringEngine.markAsBadPath();
+                return;
+            }
+
+            int len = ((String) v).length();
+            if (len <= 3 | len >= 10) {
+                SpringEngine.markAsBadPath();
+            }
+        } else if (clazz.equals(LocalDateTime.class)) {
+        } else if (clazz.equals(LocalDate.class)) {
+        } else if (clazz.equals(BigInteger.class)) {
+        } else if (clazz.equals(BigDecimal.class)) {
+        } else {
+            SpringEngine.println("[DB Warning] Unsupported soft validator for type");
+        }
     }
 }

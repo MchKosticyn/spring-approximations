@@ -47,12 +47,21 @@ public class SecurityContextImplImpl {
         Engine.assumeSoft(password.equals("Test password"));
 
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        Engine.assume(authorities.size() < 5);
+        assumeRolesCorrectness(authorities);
     }
 
     private static boolean shouldSymbolize(Field field) {
         Class<?> fieldType = field.getType();
         return fieldType == Set.class || fieldType == Collection.class;
+    }
+
+    private static void assumeRolesCorrectness(Collection<? extends GrantedAuthority> authorities) {
+        Engine.assume(authorities.size() < 3);
+        for (Object authority : authorities) {
+            Engine.assume(authority != null);
+            Engine.assume(authority instanceof GrantedAuthority);
+            Engine.assume(((GrantedAuthority)authority).getAuthority() != null);
+        }
     }
 
     private static void symbolizeField(UserDetails user, Field field) {

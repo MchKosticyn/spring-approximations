@@ -22,10 +22,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static generated.org.springframework.boot.pinnedValues.PinnedValueSource.REQUEST_USER;
 import static generated.org.springframework.boot.pinnedValues.PinnedValueSource.RESOLVED_EXCEPTION_CLASS;
 import static generated.org.springframework.boot.pinnedValues.PinnedValueSource.RESOLVED_EXCEPTION_MESSAGE;
 import static generated.org.springframework.boot.pinnedValues.PinnedValueSource.UNHANDLED_EXCEPTION_CLASS;
 import static generated.org.springframework.boot.pinnedValues.PinnedValueSource.VIEW_NAME;
+import static generated.org.springframework.boot.pinnedValues.PinnedValueStorage.getPinnedValue;
 import static generated.org.springframework.boot.pinnedValues.PinnedValueStorage.writePinnedValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
@@ -67,9 +69,8 @@ public class SpringMvcPerformer {
                 writePinnedValue(UNHANDLED_EXCEPTION_CLASS, e.getClass());
                 SpringUtils.internalLog("[USVM] analysis finished with exception", path);
             } finally {
-                if (PinnedValueStorage.getPinnedValue(PinnedValueSource.REQUEST_USER, UserDetails.class) == null
-                        && securityEnabled)
-                    PinnedValueStorage.writePinnedValue(PinnedValueSource.REQUEST_USER, createUser());
+                if (securityEnabled && getPinnedValue(REQUEST_USER, UserDetails.class) == null)
+                    writePinnedValue(REQUEST_USER, createUser());
                 PinnedValueStorage.preparePinnedValues();
             }
             return;
@@ -95,21 +96,10 @@ public class SpringMvcPerformer {
         writePinnedValue(PinnedValueSource.REQUEST_HEADER, "AUTHORIZATION", null, String.class);
     }
 
-    private static void assumeRolesCorrectness() {
-        Collection<? extends GrantedAuthority> authorities = new SecurityContextImplImpl()
-                .getAuthentication()
-                .getAuthorities();
-
-        for (Object authority : authorities) {
-            Engine.assume(authority != null);
-            Engine.assume(authority instanceof GrantedAuthority);
-            Engine.assume(((GrantedAuthority)authority).getAuthority() != null);
-        }
-    }
-
     private static UserDetails createUser() {
-        String warningText = "Should not appear in test!";
-        return new User(warningText, warningText, Collections.emptyList());
+        String username = "Test user";
+        String password = "Test password";
+        return new User(username, password, Collections.emptyList());
     }
 
     private static void writeResult(MvcResult result) {

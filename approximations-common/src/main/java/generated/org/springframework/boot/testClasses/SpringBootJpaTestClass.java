@@ -19,7 +19,6 @@ import stub.spring.SpringDatabases;
 @AutoConfigureMockMvc
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@TestPropertySource
 @DisabledInAotMode
 public class SpringBootJpaTestClass implements BaseTestClass {
 

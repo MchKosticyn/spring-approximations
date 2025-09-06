@@ -6,5 +6,3 @@ plugins {
 }
 
 addSpringDependencies()
-
-addUsvmApiDependencies()

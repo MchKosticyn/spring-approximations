@@ -34,7 +34,6 @@ public class SecurityContextImplImpl {
     private static void assumeUserInvariants(UserDetails user, Class<?> userClass) {
         Field[] fields = userClass.getDeclaredFields();
         for (Field field : fields) {
-            field.setAccessible(true);
             if (shouldSymbolize(field)) symbolizeField(user, field);
         }
 

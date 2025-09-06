@@ -39,9 +39,12 @@ public class SpringMvcPerformer {
         boolean securityEnabled = SpringEngine.isSecurityEnabled();
         for (List<Object> pathData : allPaths) {
             boolean pathFound = Engine.makeSymbolicBoolean();
-            if (!pathFound)
+            if (!pathFound) {
+                SpringEngine.markAsGoodPath();
                 continue;
+            }
 
+            SpringEngine.markAsGoodPath();
             String controllerName = (String) pathData.get(0);
             String path = (String) pathData.get(2);
             Integer paramCount = (Integer) pathData.get(3);

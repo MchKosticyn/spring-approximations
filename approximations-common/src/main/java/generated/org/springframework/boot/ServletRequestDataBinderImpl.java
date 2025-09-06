@@ -452,8 +452,7 @@ public class ServletRequestDataBinderImpl extends ServletRequestDataBinder {
             if (classIsConcrete | target == null)
                 return ResolverUtils.isPrimitiveOrWrapper(this.clazz);
 
-            // TODO
-            return ResolverUtils.isPrimitiveOrWrapper(this.clazz);
+            return Engine.typeIsPrimitiveWrapper(target);
         }
 
         public Class<?> getInternalClass() {

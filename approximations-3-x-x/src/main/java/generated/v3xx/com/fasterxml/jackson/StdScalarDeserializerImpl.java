@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class StdScalarDeserializerImpl<T> {
 
-
     @SuppressWarnings("unchecked")
     public T deserialize(JsonParser p, DeserializationContext ctxt, T intoValue) throws IOException {
         Object newValue = Engine.makeSymbolic(intoValue.getClass());

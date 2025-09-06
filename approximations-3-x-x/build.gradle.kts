@@ -10,5 +10,3 @@ addSpringDependencies()
 dependencies {
     compileOnly(project(":approximations-common"))
 }
-
-addUsvmApiDependencies()

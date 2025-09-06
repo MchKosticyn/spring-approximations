@@ -1,5 +1,6 @@
 package generated.org.springframework.boot.databases.utils;
 
+import org.usvm.api.Engine;
 import org.usvm.spring.api.SpringEngine;
 
 import java.math.BigDecimal;
@@ -12,29 +13,65 @@ public class DatabaseValidators {
 
     public static Function<Object, Boolean> getIdValidator(Class<?> clazz) {
         if (clazz.equals(Boolean.class)) {
-            return (Object v) -> v != null && (Boolean) v;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof Boolean);
+                return v != null && (Boolean) v;
+            };
         } else if (clazz.equals(Byte.class)) {
-            return (Object v) -> v != null && (Byte) v > 0;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof Byte);
+                return v != null && (Byte) v > 0;
+            };
         } else if (clazz.equals(Short.class)) {
-            return (Object v) -> v != null && (Short) v > 0;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof Short);
+                return v != null && (Short) v > 0;
+            };
         } else if (clazz.equals(Integer.class)) {
-            return (Object v) -> v != null && (Integer) v > 0;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof Integer);
+                return v != null && (Integer) v > 0;
+            };
         } else if (clazz.equals(Long.class)) {
-            return (Object v) -> v != null && (Long) v > 0;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof Long);
+                return v != null && (Long) v > 0;
+            };
         } else if (clazz.equals(Float.class)) {
-            return (Object v) -> v != null && (Float) v > 0;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof Float);
+                return v != null && (Float) v > 0;
+            };
         } else if (clazz.equals(Double.class)) {
-            return (Object v) -> v != null && (Double) v > 0;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof Double);
+                return v != null && (Double) v > 0;
+            };
         } else if (clazz.equals(String.class)) {
-            return (Object v) -> v != null && !((String) v).isEmpty();
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof String);
+                return v != null && !((String) v).isEmpty();
+            };
         } else if (clazz.equals(LocalDateTime.class)) {
-            return (Object v) -> v != null;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof LocalDateTime);
+                return v != null;
+            };
         } else if (clazz.equals(LocalDate.class)) {
-            return (Object v) -> v != null;
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof LocalDate);
+                return v != null;
+            };
         } else if (clazz.equals(BigInteger.class)) {
-            return (Object v) -> v != null && !v.equals(BigInteger.ZERO);
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof BigInteger);
+                return v != null && !v.equals(BigInteger.ZERO);
+            };
         } else if (clazz.equals(BigDecimal.class)) {
-            return (Object v) -> v != null && !v.equals(BigDecimal.ZERO);
+            return (Object v) -> {
+                Engine.assume(v == null | v instanceof BigDecimal);
+                return v != null && !v.equals(BigDecimal.ZERO);
+            };
         } else {
             throw new IllegalArgumentException("Unsupported id type validator");
         }
@@ -58,6 +95,7 @@ public class DatabaseValidators {
         } else if (clazz.equals(String.class)) {
             return (Object v) -> {
                 if (v == null) return false;
+                Engine.assume(v instanceof String);
                 int len = ((String) v).length();
                 return len > 3 & len < 10;
             };
@@ -90,6 +128,7 @@ public class DatabaseValidators {
                 return;
             }
 
+            Engine.assume(v instanceof String);
             int len = ((String) v).length();
             if (len <= 3 | len >= 10) {
                 SpringEngine.markAsBadPath();

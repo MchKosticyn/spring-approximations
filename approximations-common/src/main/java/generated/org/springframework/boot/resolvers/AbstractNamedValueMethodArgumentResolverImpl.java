@@ -97,8 +97,8 @@ public abstract class AbstractNamedValueMethodArgumentResolverImpl extends Abstr
         Object value = SymbolicValueFactory.createValidSymbolic(type, nullable);
 
         if (type == String.class) {
-            String stringValue = (String)value;
-            Engine.assume(!stringValue.isEmpty());
+            String stringValue = (String) value;
+            Engine.assume(stringValue == null || !stringValue.isEmpty());
         }
 
         PinnedValueStorage.writePinnedValue(source, name, value, type);

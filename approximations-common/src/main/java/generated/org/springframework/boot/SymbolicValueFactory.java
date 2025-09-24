@@ -3,6 +3,7 @@ package generated.org.springframework.boot;
 import generated.org.springframework.boot.pinnedValues.PinnedValueSource;
 import generated.org.springframework.boot.pinnedValues.PinnedValueStorage;
 import org.usvm.api.Engine;
+import org.usvm.spring.api.SpringEngine;
 
 import java.lang.reflect.Modifier;
 import java.time.LocalDate;
@@ -45,16 +46,32 @@ public class SymbolicValueFactory {
         }
     }
 
+    private static void prioritizeNull(Object value) {
+        if (value == null) SpringEngine.markAsEdgeCasePath();
+        else SpringEngine.markAsGoodPath();
+    }
+
+    private static void deprioritizeNull(Object value) {
+        if (value == null) SpringEngine.markAsBadPath();
+        else SpringEngine.markAsGoodPath();
+    }
+
     private static Object createSymbolicWithSameType(Class<?> type, boolean makeNullable) {
-        if (makeNullable)
-            return Engine.makeNullableSymbolic(type);
+        if (makeNullable) {
+            Object value = Engine.makeNullableSymbolic(type);
+            prioritizeNull(value);
+            return value;
+        }
 
         return Engine.makeSymbolic(type);
     }
 
     private static Object createSymbolicSubtype(Class<?> type, boolean makeNullable) {
-        if (makeNullable)
-            return Engine.makeNullableSymbolicSubtype(type);
+        if (makeNullable) {
+            Object value = Engine.makeNullableSymbolicSubtype(type);
+            prioritizeNull(value);
+            return value;
+        }
 
         return Engine.makeSymbolicSubtype(type);
     }
@@ -76,7 +93,7 @@ public class SymbolicValueFactory {
             return Engine.makeSymbolicShort();
 
         if (type.isArray())
-            return Engine.makeSymbolicArray(type, Engine.makeSymbolicInt());
+            return Engine.makeSymbolicArray(type.componentType(), Engine.makeSymbolicInt());
 
         if (type.isInterface() || Modifier.isAbstract(type.getModifiers())) {
             if (type.isAssignableFrom(ArrayList.class))

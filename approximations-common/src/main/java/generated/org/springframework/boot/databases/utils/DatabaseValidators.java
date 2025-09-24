@@ -97,7 +97,7 @@ public class DatabaseValidators {
                 if (v == null) return false;
                 Engine.assume(v instanceof String);
                 int len = ((String) v).length();
-                return len > 3 & len < 10;
+                return len > 2 & len < 20;
             };
         } else if (clazz.equals(LocalDateTime.class)) {
             return null;
@@ -130,7 +130,12 @@ public class DatabaseValidators {
 
             Engine.assume(v instanceof String);
             int len = ((String) v).length();
-            if (len <= 3 | len >= 10) {
+
+            if (len > 2) {
+                SpringEngine.markAsGoodPath();
+                if (len < 20) SpringEngine.markAsGoodPath();
+                else SpringEngine.markAsBadPath();
+            } else {
                 SpringEngine.markAsBadPath();
             }
         } else if (clazz.equals(LocalDateTime.class)) {

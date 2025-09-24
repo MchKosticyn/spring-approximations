@@ -13,6 +13,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static generated.org.springframework.boot.databases.utils.DatabaseValidators.deprioritizeValue;
+import static generated.org.springframework.boot.databases.utils.DatabaseValidators.getSoftValidator;
+
 public class BaseTable<T> extends ABaseTable<T> {
 
     private final T[] data;
@@ -86,7 +89,7 @@ public class BaseTable<T> extends ABaseTable<T> {
             Class<?> softType = typesForSoft[i];
             Function<T, Object> getter = gettersForSoft[i];
             Object value = getter.apply(t);
-            DatabaseValidators.deprioritizeValue(value, softType);
+            deprioritizeValue(value, softType);
         }
     }
 

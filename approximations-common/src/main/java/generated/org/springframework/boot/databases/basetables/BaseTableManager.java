@@ -7,6 +7,7 @@ import generated.org.springframework.boot.databases.MappedTable;
 import generated.org.springframework.boot.databases.utils.DTOInfo;
 import org.usvm.api.Engine;
 import org.usvm.spring.api.SpringEngine;
+import stub.spring.SpringDatabases;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class BaseTableManager<T, V> implements ITableManager<T> {
         this.tablesChain = this.baseTable;
 
         if (!isAutoGenerateId) applyIdValidation();
-        applyFieldsValidation(fieldsToValidateNames);
+        if (SpringDatabases.validator != null) applyFieldsValidation(fieldsToValidateNames);
 
         if (dtoInfo.isNeedTrack()) applyTrack(tableName, entityType);
 
@@ -251,12 +252,18 @@ public class BaseTableManager<T, V> implements ITableManager<T> {
             boolean equals = true;
             for (int i = 0; i < key.length; i++) {
                 if (!key[i].equals(tId[i])) {
+                    SpringEngine.markAsBadPath();
                     equals = false;
                     break;
                 }
+                SpringEngine.markAsGoodPath();
             }
 
-            if (equals) return Optional.of(t);
+            if (equals) {
+                SpringEngine.markAsGoodPath();
+                return Optional.of(t);
+            }
+            SpringEngine.markAsBadPath();
         }
         return Optional.empty();
     }

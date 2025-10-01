@@ -5,6 +5,7 @@ import generated.org.springframework.boot.databases.FiltredTable;
 import generated.org.springframework.boot.databases.ITable;
 import generated.org.springframework.boot.databases.MappedTable;
 import generated.org.springframework.boot.databases.utils.DTOInfo;
+import generated.org.springframework.boot.databases.utils.DatabaseSupportFunctions;
 import org.usvm.api.Engine;
 import org.usvm.spring.api.SpringEngine;
 import stub.spring.SpringDatabases;
@@ -135,7 +136,7 @@ public class BaseTableManager<T, V> implements ITableManager<T> {
         Function<T, Boolean> filter = (T t) -> {
             Object[] id = buildId(t);
             for (int i = 0; i < values.length; i++) {
-                if (!id[i].equals(values[i])) return false;
+                if (!DatabaseSupportFunctions.equals(id[i], values[i])) return false;
             }
 
             return true;
@@ -151,7 +152,7 @@ public class BaseTableManager<T, V> implements ITableManager<T> {
             for (int i = 0; i < values.length; i++) {
                 Object value = values[i];
                 Object tField = getters.get(names[i]).apply(t);
-                if (!value.equals(tField)) return false;
+                if (!DatabaseSupportFunctions.equals(value, tField)) return false;
             }
 
             return true;

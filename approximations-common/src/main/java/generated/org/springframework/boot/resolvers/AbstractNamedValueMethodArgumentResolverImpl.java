@@ -93,7 +93,7 @@ public abstract class AbstractNamedValueMethodArgumentResolverImpl extends Abstr
         boolean required = (boolean)key.get(2);
         Class<?> type = parameter.getParameterType();
 
-        boolean nullable = !type.isPrimitive() && !required;
+        boolean nullable = !type.isPrimitive() && !required && source != REQUEST_PATH_VARIABLE;
         Object value = SymbolicValueFactory.createValidSymbolic(type, nullable);
 
         if (type == String.class) {

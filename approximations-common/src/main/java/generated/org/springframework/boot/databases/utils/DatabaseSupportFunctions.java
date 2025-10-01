@@ -130,6 +130,12 @@ public class DatabaseSupportFunctions {
 
     // region Equals
 
+    public static Boolean equals(Object left, Object right) {
+        if (left == right) return true;
+        if (left == null || right == null) return false;
+        return left.equals(right);
+    }
+
     static Boolean equals(String left, String right) {
         return left.equals(right);
     }

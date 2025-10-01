@@ -287,7 +287,7 @@ public class CommonHQLVisitor extends AbstractParseTreeVisitor<Object> implement
     public TableWithJoins visitEntityWithJoins(HqlParser.EntityWithJoinsContext ctx) {
         ATable root = (ATable) visit(ctx.fromRoot());
         List<AJoin> joins = new ArrayList<>();
-        // TODO: visitJoin, visitCrossJoin, visitJpaCollectionJoin (deprecated)
+        // TODO: visitCrossJoin, visitJpaCollectionJoin (deprecated)
         for (HqlParser.JoinContext join : ctx.join()) {
             joins.add((AJoin) visit(join));
         }
@@ -343,16 +343,17 @@ public class CommonHQLVisitor extends AbstractParseTreeVisitor<Object> implement
         return resolveJoinType(ctx.joinType(), pred, target);
     }
 
+    @SuppressWarnings("IfCanBeSwitch")
     private CommonJoin resolveJoinType(HqlParser.JoinTypeContext ctx, AExpression pred, Path target) {
         if (ctx == null || ctx.getChildCount() == 0) return new CommonJoin(target, pred, CommonJoinType.INNER);
-        int type = ((TerminalNode) ctx.getChild(0)).getSymbol().getType();
-        if (type == HqlParser.FULL) {
+        String type = ((TerminalNode) ctx.getChild(0)).getSymbol().getText().toUpperCase();
+        if (type.equals("FULL")) {
             return new CommonJoin(target, pred, CommonJoinType.FULL);
-        } else if (type == HqlParser.LEFT) {
+        } else if (type.equals("LEFT")) {
             return new CommonJoin(target, pred, CommonJoinType.LEFT);
-        } else if (type == HqlParser.RIGHT) {
+        } else if (type.equals("RIGHT")) {
             return new CommonJoin(target, pred, CommonJoinType.RIGHT);
-        } else if (type == HqlParser.INNER) {
+        } else if (type.equals("INNER")) {
             return new CommonJoin(target, pred, CommonJoinType.INNER);
         } else {
             return new CommonJoin(target, pred, CommonJoinType.INNER);

@@ -20,7 +20,7 @@ public class DatabaseSupportFunctions {
             return null;
         }
 
-        if (left == null && right == null) return null;
+        if (left == null && right == null) return 0;
         if (left == null) return -1;
         return 1; // right == null
     }
@@ -31,68 +31,68 @@ public class DatabaseSupportFunctions {
             return res;
         }
 
-        SpringEngine.markAsBadPath();
+        SpringEngine.markAsEdgeCasePath();
         return res;
     }
 
     static Integer comparer(String left, String right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(Integer left, Integer right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(Long left, Long right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(Boolean left, Boolean right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(Float left, Float right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(Double left, Double right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(BigInteger left, BigInteger right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(BigDecimal left, BigDecimal right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(Byte left, Byte right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(Short left, Short right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(LocalDate left, LocalDate right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     static Integer comparer(LocalDateTime left, LocalDateTime right) {
         Integer base = basicComparer(left, right);
-        return compareWithPrio(base == null ? left.compareTo(right) : base);
+        return base == null ? compareWithPrio(left.compareTo(right)) : base;
     }
 
     public static BiFunction<Object, Object, Integer> getComparer(Class<?> clazz) {

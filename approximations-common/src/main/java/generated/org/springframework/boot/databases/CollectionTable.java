@@ -2,6 +2,7 @@ package generated.org.springframework.boot.databases;
 
 import org.jetbrains.annotations.NotNull;
 import org.usvm.api.Engine;
+import org.usvm.spring.api.SpringEngine;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -10,7 +11,6 @@ public class CollectionTable<T> implements ITable<T> {
 
     private final Collection<T> collection;
 
-    // Collection must be a little bit symbolic
     public CollectionTable(Collection<T> collection) {
         this.collection = collection;
     }
@@ -30,7 +30,8 @@ public class CollectionTable<T> implements ITable<T> {
     @Override
     public T ensureFirst() {
         Iterator<T> iter = iterator();
-        Engine.assume(iter.hasNext());
+        if (!iter.hasNext())
+            SpringEngine.println("[DB Warning] Collection is empty!");
         return iter.next();
     }
 

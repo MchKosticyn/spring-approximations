@@ -47,6 +47,7 @@ public class SpringBootJpaTestClass implements BaseTestClass {
     public void configure() {
         SpringDatabases.sessionFactory = sessionFactory;
         SpringDatabases.validator = validator;
+        SpringDatabases.entityManager = entityManager;
     }
 
     public static void ignoreResult(Object result) {

@@ -47,9 +47,7 @@ public class FirstDataClass {
                     & _getOneToMany().equals(other._getOneToMany())
                     & _getOneToManyAddTable().equals(other._getOneToManyAddTable())
                     & _getManyToOne().equals(other._getManyToOne())
-                    & _getManyToMany().equals(other._getManyToMany())
-                    & _getOneToOne_id().equals(other._getOneToOne_id())
-                    & _getManyToOne_id().equals(other._getManyToOne_id());
+                    & _getManyToMany().equals(other._getManyToMany());
         }
 
         return false;
@@ -103,6 +101,30 @@ public class FirstDataClass {
 
     public static void _staticRelationsInit(FirstDataClass o) { o._relationsInit(); }
 
+    // We use it for concrete entities from user db
+    // to save invariant that collection fields is ImmutableCollections
+    // and don't touch non-original additional fields
+    public void _relationsInitForConcrete() {
+
+        this.oneToOne = SpringDatabasesSample._blank2.getConcreteEntity(oneToOne);
+
+        this.oneToMany = new ImmutableListWrapper<>(
+                SpringDatabasesSample._blank2.getConcreteEntities(oneToMany)
+        );
+
+        this.oneToManyAddTable = new ImmutableListWrapper<>(
+                SpringDatabasesSample._blank2.getConcreteEntities(oneToManyAddTable)
+        );
+
+        this.manyToOne = SpringDatabasesSample._blank2.getConcreteEntity(manyToOne);
+
+        this.manyToMany = new ImmutableListWrapper<>(
+                SpringDatabasesSample._blank2.getConcreteEntities(manyToMany)
+        );
+    }
+
+    public static void _staticRelationsInitForConcrete(FirstDataClass o) { o._relationsInitForConcrete(); }
+
     @SuppressWarnings("unchecked")
     public FirstDataClass _copy() {
 
@@ -132,9 +154,6 @@ public class FirstDataClass {
                 ((IWrapper<SecondDataClass>) manyToMany).copy(SecondDataClass::_copy)
         );
         newObj._setManyToMany(manyToManyCopy);
-
-        newObj._setOneToOne_id(oneToOne_id);
-        newObj._setManyToOne_id(manyToOne_id);
 
         return newObj;
     }
@@ -183,14 +202,6 @@ public class FirstDataClass {
         return manyToMany;
     }
 
-    public Integer _getOneToOne_id() {
-        return oneToOne_id;
-    }
-
-    public Integer _getManyToOne_id() {
-        return manyToOne_id;
-    }
-
     public void _setId(Integer id) {
         this.id = id;
     }
@@ -213,14 +224,6 @@ public class FirstDataClass {
 
     public void _setManyToMany(List<SecondDataClass> manyToMany) {
         this.manyToMany = manyToMany;
-    }
-
-    public void _setOneToOne_id(Integer oneToOne_id) {
-        this.oneToOne_id = oneToOne_id;
-    }
-
-    public void _setManyToOne_id(Integer manyToOne_id) {
-        this.manyToOne_id = manyToOne_id;
     }
 
     // endregion
@@ -263,14 +266,6 @@ public class FirstDataClass {
         return o._getManyToMany();
     }
 
-    public static Integer _staticGetOneToOne_id(FirstDataClass o) {
-        return o._getOneToOne_id();
-    }
-
-    public static Integer _staticGetManyToOne_id(FirstDataClass o) {
-        return o._getManyToOne_id();
-    }
-
     public static void _staticSetId(FirstDataClass o, Integer id) {
         o._setId(id);
     }
@@ -293,14 +288,6 @@ public class FirstDataClass {
 
     public static void _staticSetManyToMany(FirstDataClass o, List<SecondDataClass> manyToMany) {
         o._setManyToMany(manyToMany);
-    }
-
-    public static void _staticSetOneToOne_id(FirstDataClass o, Integer oneToOne_id) {
-        o._setOneToOne_id(oneToOne_id);
-    }
-
-    public static void _staticSetManyToOne_id(FirstDataClass o, Integer manyToOne_id) {
-        o._setManyToOne_id(manyToOne_id);
     }
 
     // endregion
@@ -429,6 +416,7 @@ public class FirstDataClass {
 
                 FirstDataClass::new,
                 FirstDataClass::_relationsInit,
+                FirstDataClass::_relationsInitForConcrete,
                 FirstDataClass::_buildIdFunction,
                 FirstDataClass::_getIdFunction,
                 FirstDataClass::_setIdFunction,
@@ -454,6 +442,16 @@ public class FirstDataClass {
                 },
                 new Class<?>[]{
                         Integer.class
+                },
+                new String[]{
+                        "id"
+                },
+                new String[]{
+                        "oneToOne",
+                        "oneToMany",
+                        "ontToManyAddTable",
+                        "manyToOne",
+                        "manyToMany"
                 }
         );
         return _DTOInfo;

@@ -11,6 +11,7 @@ public class BaseTableTrackIterator<T> implements Iterator<T> {
     private final Iterator<T> iter;
     private final String tableName;
     private final Class<T> classType;
+    private final int userEntitiesSize;
 
     // for tracking
     private int ix;
@@ -19,9 +20,9 @@ public class BaseTableTrackIterator<T> implements Iterator<T> {
         this.iter = table.getTable().iterator();
         this.tableName = table.getTableName();
         this.classType = table.getClassType();
+        this.userEntitiesSize = table.getUserEntitiesSize();
         this.ix = 0;
     }
-
 
     public String getTableName() {
         return tableName;
@@ -37,7 +38,8 @@ public class BaseTableTrackIterator<T> implements Iterator<T> {
         Engine.assume(hasNext());
 
         T t = iter.next();
-        TableTracker.tryTrack(getTableName(), t, ix++, classType);
+        if (ix++ >= userEntitiesSize)
+            TableTracker.tryTrack(getTableName(), t, ix, classType);
 
         return t;
     }

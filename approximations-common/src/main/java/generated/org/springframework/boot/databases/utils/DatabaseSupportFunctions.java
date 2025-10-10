@@ -15,12 +15,12 @@ public class DatabaseSupportFunctions {
 
     static Integer basicComparer(Object left, Object right) {
 
-        if (left != null && right != null) {
+        if (left != null & right != null) {
             SpringEngine.markAsGoodPath();
             return null;
         }
 
-        if (left == null && right == null) return 0;
+        if (left == null & right == null) return 0;
         if (left == null) return -1;
         return 1; // right == null
     }
@@ -42,27 +42,76 @@ public class DatabaseSupportFunctions {
 
     static Integer comparer(Integer left, Integer right) {
         Integer base = basicComparer(left, right);
-        return base == null ? compareWithPrio(left.compareTo(right)) : base;
+        if (base != null) return base;
+
+        if (left.intValue() == right.intValue()) {
+            SpringEngine.markAsGoodPath();
+            return 0;
+        }
+
+        SpringEngine.markAsEdgeCasePath();
+        if (left < right) return -1;
+        return 1;
     }
 
     static Integer comparer(Long left, Long right) {
         Integer base = basicComparer(left, right);
-        return base == null ? compareWithPrio(left.compareTo(right)) : base;
+        if (base != null) return base;
+
+        if (left.longValue() == right.longValue()) {
+            SpringEngine.markAsGoodPath();
+            return 0;
+        }
+
+        SpringEngine.markAsEdgeCasePath();
+        if (left < right) return -1;
+        return 1;
     }
 
     static Integer comparer(Boolean left, Boolean right) {
         Integer base = basicComparer(left, right);
-        return base == null ? compareWithPrio(left.compareTo(right)) : base;
+        if (base != null) return base;
+
+        if (!left & right) {
+            SpringEngine.markAsEdgeCasePath();
+            return -1;
+        }
+
+        if (left & !right) {
+            SpringEngine.markAsEdgeCasePath();
+            return 1;
+        }
+
+        SpringEngine.markAsGoodPath();
+        return 0;
     }
 
     static Integer comparer(Float left, Float right) {
         Integer base = basicComparer(left, right);
-        return base == null ? compareWithPrio(left.compareTo(right)) : base;
+        if (base != null) return base;
+
+        if (left.floatValue() == right.floatValue()) {
+            SpringEngine.markAsGoodPath();
+            return 0;
+        }
+
+        SpringEngine.markAsEdgeCasePath();
+        if (left < right) return -1;
+        return 1;
     }
 
     static Integer comparer(Double left, Double right) {
         Integer base = basicComparer(left, right);
-        return base == null ? compareWithPrio(left.compareTo(right)) : base;
+        if (base != null) return base;
+
+        if (left.doubleValue() == right.doubleValue()) {
+            SpringEngine.markAsGoodPath();
+            return 0;
+        }
+
+        SpringEngine.markAsEdgeCasePath();
+        if (left < right) return -1;
+        return 1;
     }
 
     static Integer comparer(BigInteger left, BigInteger right) {
@@ -77,12 +126,30 @@ public class DatabaseSupportFunctions {
 
     static Integer comparer(Byte left, Byte right) {
         Integer base = basicComparer(left, right);
-        return base == null ? compareWithPrio(left.compareTo(right)) : base;
+        if (base != null) return base;
+
+        if (left.byteValue() == right.byteValue()) {
+            SpringEngine.markAsGoodPath();
+            return 0;
+        }
+
+        SpringEngine.markAsEdgeCasePath();
+        if (left < right) return -1;
+        return 1;
     }
 
     static Integer comparer(Short left, Short right) {
         Integer base = basicComparer(left, right);
-        return base == null ? compareWithPrio(left.compareTo(right)) : base;
+        if (base != null) return base;
+
+        if (left.shortValue() == right.shortValue()) {
+            SpringEngine.markAsGoodPath();
+            return 0;
+        }
+
+        SpringEngine.markAsEdgeCasePath();
+        if (left < right) return -1;
+        return 1;
     }
 
     static Integer comparer(LocalDate left, LocalDate right) {

@@ -8,18 +8,23 @@ import java.util.Iterator;
 public class BaseTableConstraintValidate<T> extends AChainedBaseTable<T> {
 
     private final String[] fieldNames;
+    private final int userEntitiesSize;
 
     public BaseTableConstraintValidate(
             ABaseTable<T> table,
-            String[] fieldNames
+            String[] fieldNames,
+            int userEntitiesSize
     ) {
         this.table = table;
         this.fieldNames = fieldNames;
+        this.userEntitiesSize = userEntitiesSize;
     }
 
     public String[] getFieldNames() {
         return fieldNames;
     }
+
+    public int getUserEntitiesSize() { return userEntitiesSize; }
 
     @NotNull
     @Override

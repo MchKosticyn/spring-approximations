@@ -10,17 +10,25 @@ import java.util.Set;
 public class BaseTableConstraintValidateIterator<T> implements Iterator<T> {
 
     private final Iterator<T> tblIter;
-
     private final String[] fieldNames;
+
+    private int ix;
+    private final int userEntitiesSize;
 
     public BaseTableConstraintValidateIterator(BaseTableConstraintValidate<T> table) {
         this.tblIter = table.getTable().iterator();
         this.fieldNames = table.getFieldNames();
+
+        this.ix = 0;
+        this.userEntitiesSize = table.getUserEntitiesSize();
     }
 
     public BaseTableConstraintValidateIterator(Iterator<T> tableIter, String[] fieldNames) {
         this.tblIter = tableIter;
         this.fieldNames = fieldNames;
+
+        this.ix = 0;
+        this.userEntitiesSize = 0;
     }
 
     public void validate(T t) {
@@ -40,7 +48,8 @@ public class BaseTableConstraintValidateIterator<T> implements Iterator<T> {
         Engine.assume(hasNext());
 
         T next = tblIter.next();
-        validate(next);
+
+        if (ix++ >= userEntitiesSize) validate(next);
 
         return next;
     }

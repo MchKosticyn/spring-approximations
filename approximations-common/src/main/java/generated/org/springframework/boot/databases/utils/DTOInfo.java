@@ -21,6 +21,7 @@ public class DTOInfo<T, V> {
     // DTO functions
     private final Supplier<T> blankInit;
     private final Consumer<T> relationsInit;
+    private final Consumer<T> relationsInitForConcrete;
     private final Function<T, Object[]> buildIdFunction;
     private final Function<T, Object> getIdFunction;
     private final BiConsumer<T, Object> setIdFunction;
@@ -34,6 +35,9 @@ public class DTOInfo<T, V> {
     private final String[] fieldsToSoftNames; // names of fields for assumeSoft
     private final Class<?>[] fieldsToSoftTypes; // type of fields for assumeSoft
 
+    private final String[] idFieldsNames;
+    private final String[] relatedFieldsNames;
+
     public DTOInfo(
             Class<V> idType,
             Class<T> entityType,
@@ -45,6 +49,7 @@ public class DTOInfo<T, V> {
             // DTO functions
             Supplier<T> blankInit,
             Consumer<T> relationsInit,
+            Consumer<T> relationsInitForConcrete,
             Function<T, Object[]> buildIdFunction,
             Function<T, Object> getIdFunction,
             BiConsumer<T, Object> setIdFunction,
@@ -56,7 +61,10 @@ public class DTOInfo<T, V> {
             BiConsumer<T, Object>[] setters,
 
             String[] fieldsToSoftNames,
-            Class<?>[] fieldsToSoftTypes
+            Class<?>[] fieldsToSoftTypes,
+
+            String[] idFieldsNames,
+            String[] relatedFieldsNames
     ) {
         this.idType = idType;
         this.entityType = entityType;
@@ -66,6 +74,7 @@ public class DTOInfo<T, V> {
         this.needTrack = needTrack;
         this.blankInit = blankInit;
         this.relationsInit = relationsInit;
+        this.relationsInitForConcrete = relationsInitForConcrete;
         this.buildIdFunction = buildIdFunction;
         this.getIdFunction = getIdFunction;
         this.setIdFunction = setIdFunction;
@@ -75,6 +84,8 @@ public class DTOInfo<T, V> {
         this.setters = setters;
         this.fieldsToSoftNames = fieldsToSoftNames;
         this.fieldsToSoftTypes = fieldsToSoftTypes;
+        this.idFieldsNames = idFieldsNames;
+        this.relatedFieldsNames = relatedFieldsNames;
     }
 
     public Class<V> getIdType() {
@@ -108,6 +119,8 @@ public class DTOInfo<T, V> {
     public Consumer<T> getRelationsInit() {
         return relationsInit;
     }
+
+    public Consumer<T> getRelationsInitForConcrete() { return relationsInitForConcrete; }
 
     public Function<T, Object[]> getBuildIdFunction() {
         return buildIdFunction;
@@ -144,4 +157,8 @@ public class DTOInfo<T, V> {
     public Class<?>[] getFieldsToSoftTypes() {
         return fieldsToSoftTypes;
     }
+
+    public String[] getIdFieldsNames() { return idFieldsNames; }
+
+    public String[] getRelatedFieldsNames() { return relatedFieldsNames; }
 }
